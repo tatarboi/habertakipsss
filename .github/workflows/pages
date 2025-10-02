@@ -18,23 +18,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # (Node projesi değilse bu kısmı kaldır; Jekyll için gerekmez)
 
-      # Node projeleri (React/Vite vs.) için:
-      - uses: actions/setup-node@v4
+      - name: Jekyll build
+        uses: actions/jekyll-build-pages@v1
         with:
-          node-version: '20'
+          source: .
+          destination: ./_site
 
-      - name: Install deps
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      # Vite/React çıktısı genelde 'dist' olur, Next static export 'out' olabilir
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist  # projenin build çıktısı (ör: dist, out, build)
+          path: ./_site
 
   deploy:
     needs: build
